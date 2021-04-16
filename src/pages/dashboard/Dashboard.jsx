@@ -1,7 +1,11 @@
 import React, { useContext } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link, useRouteMatch, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import AuthContext from './../../auth/AuthContext';
+import ViewAllPanel from './panels/ViewAllPanel';
+import EditPanel from './panels/EditPanel';
+import DeletePanel from './panels/DeletePanel';
+import AddPanel from './panels/AddPanel';
 
 const DashBoardStyles = styled.section`
     display: flex;
@@ -13,6 +17,18 @@ const SideBar = styled.aside`
     height: calc(100vh - 64px);
     position: relative;
     z-index: 1;
+    padding: 1rem;
+    h1{
+        font-size: 1rem;
+    }
+    p{
+        margin-bottom: 1rem;
+        color: grey;
+    }
+    a{
+        text-decoration: none;
+        font-size: 14px;
+    }
 `
 
 const Panels = styled.section`
@@ -23,8 +39,7 @@ const Panels = styled.section`
 
 const DashBoard = (props) => {
      const auth = useContext(AuthContext);
-     console.log("Dashboard Render");
-     console.log(auth);
+     const {path, url} = useRouteMatch();
 
      if(auth.isUser){
         return (  
@@ -35,13 +50,20 @@ const DashBoard = (props) => {
                         <p>firebase who knew</p>
                     </header>
                     <ul>
-                        <li>view all</li>
-                        <li>add</li>
-                        <li>remove</li>
-                        <li>edit</li>
+                        <li><Link to={`${url}`}>view all</Link></li>
+                        <li><Link to={`${url}/add`}>add content</Link></li>
+                        <li><Link to={`${url}/edit`}>edit content</Link></li>
+                        <li><Link to={`${url}/delete`}>remove content</Link></li>
                     </ul>
                 </SideBar>
-                <Panels></Panels>
+                <Panels>
+                    <Switch>
+                        <Route exact path={path}><ViewAllPanel/></Route>
+                        <Route path={`${path}/add`}><AddPanel/></Route>
+                        <Route path={`${path}/edit`}><EditPanel/></Route>
+                        <Route path={`${path}/delete`}><DeletePanel/></Route>
+                    </Switch>
+                </Panels>
             </DashBoardStyles>
         );
      } else {
