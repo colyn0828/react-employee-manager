@@ -1,26 +1,45 @@
-import React from 'react';
-import firebaseApp from './../../../firebase/firebaseConfig';
+import React, {useEffect, useState}  from "react";
+import styled from "styled-components";
 
-const ViewAllPanel = () => {
+import firebaseApp from "firebase/firebaseConfig";
 
-    // path to the document
-    const docRef = firebaseApp.firestore().collection('users').doc(firebaseApp.auth().currentUser.uid);
-    const clientRef = docRef.collection('employees').doc('a1');
-    
-    clientRef.get()
-    .then(doc=>{
-        console.log(doc.data());
+import AddEmployeeWidget from "./widgets/AddEmployeeWidget";
+import EmployeeDisplayWidget from "./widgets/EmployeeDisplayWidget";
+
+const ViewAllPanelStyles = styled.section`
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  aside {
+    width: 480px;
+  }
+`;
+
+const ViewAll = (props) => {
+  const [employees, setEmployees] = useState([]);
+  useEffect(()=>{
+    fetchEmployees()
+  }, [])
+  function fetchEmployees(){
+    let docStore;
+    const userId = firebaseApp.auth().currentUser.uid;
+    const employeesRef = firebaseApp.firestore().collection(userId).doc('hr').collection('employees');
+
+    employeesRef
+    .onSnapshot(snapshot=>{
+      docStore = snapshot.docs.map(doc=>doc.data())
+      setEmployees(docStore);
     })
-    .catch(error=>{
-        console.log(error);
-    })
-    
+  }
+  return (
+    <section>
+      <ViewAllPanelStyles>
+        <AddEmployeeWidget />
+        <EmployeeDisplayWidget employees={employees} />
+      </ViewAllPanelStyles>
+    </section>
+  );
+};
 
-    return ( 
-        <header>
-            <h2>View All Panels</h2>
-        </header>
-     );
-}
- 
-export default ViewAllPanel;
+export default ViewAll;

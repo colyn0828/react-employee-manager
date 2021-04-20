@@ -1,6 +1,6 @@
 import * as React from "react";
 
-function SvgAddEmployee(props) {
+function SvgAdd(props) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" height={24} width={24} {...props}>
       <path d="M0 0h24v24H0z" fill="none" />
@@ -9,4 +9,4 @@ function SvgAddEmployee(props) {
   );
 }
 
-export default SvgAddEmployee;
+export default SvgAdd;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Logo from './../components/icons/Logo';
+import Logo from '../css/icons/Logo';
 
 const HomePageStyles = styled.header`
     text-align: center;
